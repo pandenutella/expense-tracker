@@ -6,7 +6,7 @@ import { LoginOutlined } from "@ant-design/icons";
 import { Card, Layout } from "antd";
 
 export default function LoginPage() {
-  useAnonymousRoute("/");
+  useAnonymousRoute();
 
   return (
     <Layout.Content

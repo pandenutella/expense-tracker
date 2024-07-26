@@ -1,24 +1,16 @@
 "use client";
 
-import { auth } from "@/firebase";
+import Header from "@/components/Header";
 import usePrivateRoute from "@/hooks/usePrivateRoute";
-import { Button, Layout, message } from "antd";
-import { signOut } from "firebase/auth";
+import { Layout } from "antd";
 
 export default function HomePage() {
-  usePrivateRoute("/login");
-
-  const handleLogout = () => {
-    signOut(auth).then(() => {
-      message.success("Logged out successfully!");
-    });
-  };
+  usePrivateRoute();
 
   return (
-    <Layout.Content>
-      <Button onClick={handleLogout} type="primary" danger>
-        Logout
-      </Button>
-    </Layout.Content>
+    <>
+      <Header />
+      <Layout.Content></Layout.Content>
+    </>
   );
 }
