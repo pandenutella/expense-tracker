@@ -6,17 +6,34 @@ import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { useRef, useState } from "react";
 
 const PHONE_NUMBER_PREFIX = "+63";
+const MAX_FAILED_OTP_ATTEMPTS = 3;
+
+const getErrorMessage = (error) => {
+  if (!error) {
+    return "Something went wrong, please try again later.";
+  }
+
+  switch (error.code) {
+    case "auth/invalid-app-credential":
+      return "Login failed! Invalid credential.";
+    case "auth/invalid-verification-code":
+      return "Login failed! Invalid verification code.";
+    default:
+      return "Something went wrong, please try again later.";
+  }
+};
 
 export default function LoginForm() {
-  const [captcha, setCaptcha] = useState(null);
   const [mode, setMode] = useState("phone-number");
   const [processing, setProcessing] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [form] = Form.useForm();
 
   const recaptchaVerifier = useRef(null);
   const confirmationResult = useRef(null);
 
   const initializeCaptcha = () => {
-    if (captcha) {
+    if (recaptchaVerifier.current) {
       return Promise.resolve(recaptchaVerifier.current);
     }
 
@@ -28,11 +45,9 @@ export default function LoginForm() {
       }
     );
 
-    return recaptchaVerifier.current.verify().then((captcha) => {
-      setCaptcha(captcha);
-
-      return recaptchaVerifier.current;
-    });
+    return recaptchaVerifier.current
+      .verify()
+      .then(() => recaptchaVerifier.current);
   };
 
   const handleLogin = (data) => {
@@ -50,15 +65,7 @@ export default function LoginForm() {
         })
         .catch((error) => {
           console.error(error);
-          if (error.code) {
-            switch (error.code) {
-              case "auth/invalid-app-credential":
-                message.error(
-                  "Login failed! Phone number does not belong to any user."
-                );
-                break;
-            }
-          }
+          message.error(getErrorMessage(error));
         })
         .finally(() => setProcessing(false));
     } else if ("sms-otp" === mode) {
@@ -67,12 +74,30 @@ export default function LoginForm() {
       confirmationResult.current
         .confirm(data.smsOtp)
         .then(() => message.success("Logged in successfully!"))
+        .catch((error) => {
+          console.error(error);
+          message.error(getErrorMessage(error));
+
+          if (attempt >= MAX_FAILED_OTP_ATTEMPTS - 1) {
+            setAttempt(0);
+            setMode("phone-number");
+            form.resetFields();
+          } else {
+            setAttempt((attempt) => (attempt += 1));
+            form.resetFields(["smsOtp"]);
+          }
+        })
         .finally(() => setProcessing(false));
     }
   };
 
   return (
-    <Form layout="vertical" onFinish={handleLogin} requiredMark="optional">
+    <Form
+      form={form}
+      layout="vertical"
+      onFinish={handleLogin}
+      requiredMark="optional"
+    >
       {"phone-number" === mode && (
         <Form.Item
           name="phoneNumber"
@@ -107,7 +132,7 @@ export default function LoginForm() {
             },
           ]}
         >
-          <Input.OTP style={{ width: "100%" }} autoFocus mask />
+          <Input.OTP style={{ width: "100%" }} autoFocus />
         </Form.Item>
       )}
       <Button htmlType="submit" type="primary" block loading={processing}>
