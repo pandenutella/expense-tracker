@@ -1,17 +1,10 @@
 "use client";
 
 import BasicLoginForm from "@/components/BasicLoginForm";
-import useAnonymousRoute from "@/hooks/useAnonymousRoute";
 import { LoginOutlined } from "@ant-design/icons";
 import { Card, Layout } from "antd";
 
 export default function LoginPage() {
-  const { redirecting } = useAnonymousRoute();
-
-  if (redirecting) {
-    return <></>;
-  }
-
   return (
     <Layout.Content
       style={{
