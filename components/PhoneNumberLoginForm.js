@@ -23,7 +23,7 @@ const getErrorMessage = (error) => {
   }
 };
 
-export default function LoginForm() {
+export default function PhoneNumberLoginForm() {
   const [mode, setMode] = useState("phone-number");
   const [processing, setProcessing] = useState(false);
   const [attempt, setAttempt] = useState(0);
