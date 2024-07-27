@@ -1,12 +1,16 @@
 "use client";
 
-import PhoneNumberLoginForm from "@/components/PhoneNumberLoginForm";
+import BasicLoginForm from "@/components/BasicLoginForm";
 import useAnonymousRoute from "@/hooks/useAnonymousRoute";
 import { LoginOutlined } from "@ant-design/icons";
 import { Card, Layout } from "antd";
 
 export default function LoginPage() {
-  useAnonymousRoute();
+  const { redirecting } = useAnonymousRoute();
+
+  if (redirecting) {
+    return <></>;
+  }
 
   return (
     <Layout.Content
@@ -21,7 +25,7 @@ export default function LoginPage() {
         title={<LoginOutlined />}
         extra="Login to Expense Tracker"
       >
-        <PhoneNumberLoginForm />
+        <BasicLoginForm />
       </Card>
     </Layout.Content>
   );

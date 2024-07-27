@@ -8,9 +8,12 @@ export default function useAnonymousRoute() {
   const { user } = useAuthContext();
   const router = useRouter();
 
+  const redirecting = user != null;
   useEffect(() => {
-    if (user != null) {
-      router.push("/");
+    if (redirecting) {
+      router.push("/app");
     }
-  }, [user]);
+  }, [redirecting]);
+
+  return { redirecting };
 }

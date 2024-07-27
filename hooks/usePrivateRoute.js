@@ -6,9 +6,12 @@ export default function usePrivateRoute() {
   const { user } = useAuthContext();
   const router = useRouter();
 
+  const redirecting = user == null;
   useEffect(() => {
-    if (user == null) {
+    if (redirecting) {
       router.push("/login");
     }
-  }, [user]);
+  }, [redirecting]);
+
+  return { redirecting };
 }
