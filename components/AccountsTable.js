@@ -1,6 +1,6 @@
+import useFetchAllService from "@/hooks/useFetchAllService";
 import { findAllAccounts } from "@/services/accounts.service";
 import { Table } from "antd";
-import { useEffect, useState } from "react";
 
 const phPeso = new Intl.NumberFormat("en-PH", {
   style: "currency",
@@ -8,25 +8,14 @@ const phPeso = new Intl.NumberFormat("en-PH", {
 });
 
 export default function AccountsTable() {
-  const [accounts, setAccounts] = useState([]);
-  const [fetching, setFetching] = useState(false);
-
-  useEffect(() => {
-    setFetching(true);
-    findAllAccounts()
-      .then((accounts) => {
-        setAccounts(
-          accounts.map((account) => ({
-            ...account,
-            amount: 0,
-            key: account.id,
-          }))
-        );
-      })
-      .finally(() => {
-        setFetching(false);
-      });
-  }, []);
+  const { data: accounts, fetching } = useFetchAllService(
+    () => findAllAccounts(),
+    (account) => ({
+      ...account,
+      amount: 0,
+      key: account.id,
+    })
+  );
 
   const totalAmount = accounts.reduce(
     (totalAmount, account) => totalAmount + account.amount,
