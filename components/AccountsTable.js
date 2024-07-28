@@ -1,6 +1,7 @@
 import useFetchAllService from "@/hooks/useFetchAllService";
 import { findAllAccounts } from "@/services/accounts.service";
-import { Table } from "antd";
+import { EditOutlined, FundViewOutlined } from "@ant-design/icons";
+import { Button, Space, Table } from "antd";
 
 const phPeso = new Intl.NumberFormat("en-PH", {
   style: "currency",
@@ -34,6 +35,16 @@ export default function AccountsTable() {
       title: phPeso.format(totalAmount),
       render: (amount) => phPeso.format(amount),
       align: "right",
+    },
+    {
+      key: "actions",
+      align: "right",
+      render: () => (
+        <Space>
+          <Button icon={<FundViewOutlined />} disabled />
+          <Button icon={<EditOutlined />} disabled />
+        </Space>
+      ),
     },
   ];
 
