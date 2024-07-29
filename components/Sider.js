@@ -9,7 +9,7 @@ export default function Sider() {
 
   if (desktop) {
     return (
-      <Layout.Sider collapsible theme="dark">
+      <Layout.Sider collapsible theme="light">
         <NavigationMenu mode="inline" />
       </Layout.Sider>
     );

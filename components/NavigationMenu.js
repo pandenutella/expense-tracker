@@ -32,7 +32,7 @@ export default function NavigationMenu({ mode }) {
     <Menu
       mode={mode}
       items={items}
-      theme="dark"
+      theme="light"
       selectedKeys={[selectedKey]}
       onClick={handleClick}
     />

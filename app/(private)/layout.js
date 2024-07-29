@@ -16,9 +16,9 @@ export default function AppLayout({ children }) {
 
   return (
     <AccountsContextProvider>
-      <Sider />
+      <Header />
       <Layout>
-        <Header />
+        <Sider />
         <Content style={{ padding: 20 }}>{children}</Content>
       </Layout>
       <AddTransactionButton />

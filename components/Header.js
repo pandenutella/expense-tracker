@@ -25,6 +25,9 @@ export default function Header() {
     <Layout.Header
       style={{
         backgroundColor: "white",
+        borderBottomColor: "rgb(240, 240, 240)",
+        borderBottomStyle: "solid",
+        borderBottomWidth: 0.8,
         paddingLeft: padding,
         paddingRight: padding,
       }}
