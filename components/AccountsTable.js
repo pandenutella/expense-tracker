@@ -2,6 +2,7 @@ import { useAccountsContext } from "@/contexts/AccountsContext";
 import useResponsiveValue from "@/hooks/useResponsiveValue";
 import { EditOutlined, FundViewOutlined } from "@ant-design/icons";
 import { Button, Space, Table } from "antd";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const phPeso = new Intl.NumberFormat("en-PH", {
@@ -11,9 +12,14 @@ const phPeso = new Intl.NumberFormat("en-PH", {
 
 export default function AccountsTable() {
   const size = useResponsiveValue("medium", "small");
-  const { accounts, fetch, fetching } = useAccountsContext();
+  const { accounts, fetch, fetching, fetched } = useAccountsContext();
+  const router = useRouter();
 
-  useEffect(fetch, []);
+  useEffect(() => {
+    if (!fetched) {
+      fetch();
+    }
+  }, []);
 
   const totalAmount = accounts.reduce(
     (totalAmount, account) => totalAmount + account.amount,
@@ -36,9 +42,12 @@ export default function AccountsTable() {
     {
       key: "actions",
       align: "right",
-      render: () => (
+      render: (_, account) => (
         <Space>
-          <Button icon={<FundViewOutlined />} disabled />
+          <Button
+            icon={<FundViewOutlined />}
+            onClick={() => router.push(`/accounts/${account.id}`)}
+          />
           <Button icon={<EditOutlined />} disabled />
         </Space>
       ),

@@ -16,6 +16,7 @@ const mapAccount = (account) => ({
 export const AccountsContextProvider = ({ children }) => {
   const [accounts, setAccounts] = useState([]);
   const [fetching, setFetching] = useState(false);
+  const [fetched, setFetched] = useState(false);
 
   const fetch = () => {
     setFetching(true);
@@ -23,7 +24,10 @@ export const AccountsContextProvider = ({ children }) => {
       .then((accounts) => accounts.map(mapAccount))
       .then((accounts) => accounts.sort(sortByProperty("label")))
       .then(setAccounts)
-      .finally(() => setFetching(false));
+      .finally(() => {
+        setFetching(false);
+        setFetched(true);
+      });
   };
 
   const addAccount = (account) => {
@@ -33,7 +37,9 @@ export const AccountsContextProvider = ({ children }) => {
   };
 
   return (
-    <AccountsContext.Provider value={{ accounts, addAccount, fetch, fetching }}>
+    <AccountsContext.Provider
+      value={{ accounts, addAccount, fetch, fetching, fetched }}
+    >
       {children}
     </AccountsContext.Provider>
   );

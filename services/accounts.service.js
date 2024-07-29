@@ -1,5 +1,10 @@
 import { auth } from "@/firebase";
-import { createOne, existsBy, readAll } from "@/utilities/service.utility";
+import {
+  createOne,
+  existsBy,
+  readAll,
+  readById,
+} from "@/utilities/service.utility";
 import { orderBy, where } from "firebase/firestore";
 
 const COLLECTION = "accounts";
@@ -9,6 +14,10 @@ export const findAllAccounts = async () => {
     where("userUuid", "==", auth.currentUser.uid),
     orderBy("label"),
   ]);
+};
+
+export const findById = async (id) => {
+  return await readById(COLLECTION, id);
 };
 
 export const createAccount = async (account, startingBalance) => {

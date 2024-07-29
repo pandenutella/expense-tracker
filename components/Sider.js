@@ -1,22 +1,8 @@
 "use client";
 
 import useResponsiveValue from "@/hooks/useResponsiveValue";
-import { BankOutlined, CalculatorOutlined } from "@ant-design/icons";
 import { Layout } from "antd";
 import NavigationMenu from "./NavigationMenu";
-
-const items = [
-  {
-    key: "/budget",
-    label: "Budget",
-    icon: <CalculatorOutlined />,
-  },
-  {
-    key: "/accounts",
-    label: "Accounts",
-    icon: <BankOutlined />,
-  },
-];
 
 export default function Sider() {
   const desktop = useResponsiveValue(true, false);

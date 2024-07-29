@@ -21,6 +21,9 @@ export default function NavigationMenu({ mode }) {
   const router = useRouter();
   const pathname = usePathname();
 
+  const selectedKey =
+    items.find((item) => pathname.startsWith(item.key))?.key ?? items[0].key;
+
   const handleClick = ({ key }) => {
     router.push(key);
   };
@@ -30,7 +33,7 @@ export default function NavigationMenu({ mode }) {
       mode={mode}
       items={items}
       theme="dark"
-      selectedKeys={pathname}
+      selectedKeys={[selectedKey]}
       onClick={handleClick}
     />
   );
