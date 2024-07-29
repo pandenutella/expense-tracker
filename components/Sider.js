@@ -1,8 +1,9 @@
 "use client";
 
+import useResponsiveValue from "@/hooks/useResponsiveValue";
 import { BankOutlined, CalculatorOutlined } from "@ant-design/icons";
-import { Layout, Menu } from "antd";
-import { usePathname, useRouter } from "next/navigation";
+import { Layout } from "antd";
+import NavigationMenu from "./NavigationMenu";
 
 const items = [
   {
@@ -18,22 +19,27 @@ const items = [
 ];
 
 export default function Sider() {
-  const router = useRouter();
-  const pathname = usePathname();
+  const desktop = useResponsiveValue(true, false);
 
-  const handleClick = ({ key }) => {
-    router.push(key);
-  };
+  if (desktop) {
+    return (
+      <Layout.Sider collapsible theme="dark">
+        <NavigationMenu mode="inline" />
+      </Layout.Sider>
+    );
+  }
 
   return (
-    <Layout.Sider collapsible theme="dark">
-      <Menu
-        mode="inline"
-        items={items}
-        theme="dark"
-        selectedKeys={pathname}
-        onClick={handleClick}
-      />
-    </Layout.Sider>
+    <Layout.Footer
+      style={{
+        position: "fixed",
+        left: 0,
+        bottom: 0,
+        width: "100%",
+        padding: 0,
+      }}
+    >
+      <NavigationMenu mode="horizontal" />
+    </Layout.Footer>
   );
 }

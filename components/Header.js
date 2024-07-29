@@ -1,11 +1,14 @@
 "use client";
 
 import { auth } from "@/firebase";
+import useResponsiveValue from "@/hooks/useResponsiveValue";
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Button, Dropdown, Flex, Layout, message } from "antd";
 import { signOut } from "firebase/auth";
 
 export default function Header() {
+  const padding = useResponsiveValue(50, 20);
+
   const handleUserActions = ({ key }) => {
     if ("logout" === key) {
       handleLogout();
@@ -19,7 +22,13 @@ export default function Header() {
   };
 
   return (
-    <Layout.Header style={{ backgroundColor: "white" }}>
+    <Layout.Header
+      style={{
+        backgroundColor: "white",
+        paddingLeft: padding,
+        paddingRight: padding,
+      }}
+    >
       <Flex
         justify="flex-end"
         align="center"

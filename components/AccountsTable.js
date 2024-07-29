@@ -1,4 +1,5 @@
 import useFetchAllService from "@/hooks/useFetchAllService";
+import useResponsiveValue from "@/hooks/useResponsiveValue";
 import { findAllAccounts } from "@/services/accounts.service";
 import { EditOutlined, FundViewOutlined } from "@ant-design/icons";
 import { Button, Space, Table } from "antd";
@@ -9,6 +10,8 @@ const phPeso = new Intl.NumberFormat("en-PH", {
 });
 
 export default function AccountsTable() {
+  const size = useResponsiveValue("medium", "small");
+
   const { data: accounts, fetching } = useFetchAllService(
     () => findAllAccounts(),
     (account) => ({
@@ -54,6 +57,7 @@ export default function AccountsTable() {
       columns={columns}
       dataSource={accounts}
       loading={fetching}
+      size={size}
     />
   );
 }
