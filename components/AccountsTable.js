@@ -3,7 +3,7 @@ import useResponsiveValue from "@/hooks/useResponsiveValue";
 import { EditOutlined, FundViewOutlined } from "@ant-design/icons";
 import { Button, Space, Table } from "antd";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 const phPeso = new Intl.NumberFormat("en-PH", {
   style: "currency",
@@ -20,6 +20,11 @@ export default function AccountsTable() {
       fetch();
     }
   }, []);
+
+  const dataSource = useMemo(
+    () => accounts.map((account) => ({ ...account, key: account.id })),
+    [accounts]
+  );
 
   const totalAmount = accounts.reduce(
     (totalAmount, account) => totalAmount + account.amount,
@@ -42,11 +47,11 @@ export default function AccountsTable() {
     {
       key: "actions",
       align: "right",
-      render: (_, account) => (
+      render: (_, record) => (
         <Space>
           <Button
             icon={<FundViewOutlined />}
-            onClick={() => router.push(`/accounts/${account.id}`)}
+            onClick={() => router.push(`/accounts/${record.id}`)}
           />
           <Button icon={<EditOutlined />} disabled />
         </Space>
@@ -58,7 +63,7 @@ export default function AccountsTable() {
     <Table
       pagination={false}
       columns={columns}
-      dataSource={accounts}
+      dataSource={dataSource}
       loading={fetching}
       size={size}
     />

@@ -7,12 +7,6 @@ import { createContext, useContext, useState } from "react";
 export const AccountsContext = createContext();
 export const useAccountsContext = () => useContext(AccountsContext);
 
-const mapAccount = (account) => ({
-  ...account,
-  amount: 0,
-  key: account.id,
-});
-
 export const AccountsContextProvider = ({ children }) => {
   const [accounts, setAccounts] = useState([]);
   const [fetching, setFetching] = useState(false);
@@ -21,7 +15,6 @@ export const AccountsContextProvider = ({ children }) => {
   const fetch = () => {
     setFetching(true);
     findAllAccounts()
-      .then((accounts) => accounts.map(mapAccount))
       .then((accounts) => accounts.sort(sortByProperty("label")))
       .then(setAccounts)
       .finally(() => {
@@ -32,7 +25,7 @@ export const AccountsContextProvider = ({ children }) => {
 
   const addAccount = (account) => {
     setAccounts((accounts) =>
-      [...accounts, mapAccount(account)].sort(sortByProperty("label"))
+      [...accounts, account].sort(sortByProperty("label"))
     );
   };
 
