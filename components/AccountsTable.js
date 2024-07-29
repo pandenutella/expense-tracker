@@ -1,8 +1,8 @@
-import useFetchAllService from "@/hooks/useFetchAllService";
+import { useAccountsContext } from "@/contexts/AccountsContext";
 import useResponsiveValue from "@/hooks/useResponsiveValue";
-import { findAllAccounts } from "@/services/accounts.service";
 import { EditOutlined, FundViewOutlined } from "@ant-design/icons";
 import { Button, Space, Table } from "antd";
+import { useEffect } from "react";
 
 const phPeso = new Intl.NumberFormat("en-PH", {
   style: "currency",
@@ -11,15 +11,9 @@ const phPeso = new Intl.NumberFormat("en-PH", {
 
 export default function AccountsTable() {
   const size = useResponsiveValue("medium", "small");
+  const { accounts, fetch, fetching } = useAccountsContext();
 
-  const { data: accounts, fetching } = useFetchAllService(
-    () => findAllAccounts(),
-    (account) => ({
-      ...account,
-      amount: 0,
-      key: account.id,
-    })
-  );
+  useEffect(fetch, []);
 
   const totalAmount = accounts.reduce(
     (totalAmount, account) => totalAmount + account.amount,

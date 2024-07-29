@@ -1,3 +1,4 @@
+import { useAccountsContext } from "@/contexts/AccountsContext";
 import { createAccount } from "@/services/accounts.service";
 import { BankOutlined } from "@ant-design/icons";
 import { Button, Form, Input, InputNumber, message, Modal, Select } from "antd";
@@ -6,6 +7,7 @@ import { useState } from "react";
 export default function AddAccount() {
   const [open, setOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const { addAccount } = useAccountsContext();
 
   const handleOpen = () => {
     setOpen(true);
@@ -32,6 +34,8 @@ export default function AddAccount() {
         message.success(
           `Added account "${createdAccount.label}" successfully!`
         );
+
+        addAccount(createdAccount);
         setOpen(false);
       })
       .catch(catchError)
