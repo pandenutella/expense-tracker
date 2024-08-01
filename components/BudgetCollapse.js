@@ -1,6 +1,7 @@
 import useResponsiveValue from "@/hooks/useResponsiveValue";
 import { Collapse } from "antd";
 import { useMemo } from "react";
+import BudgetTable from "./BudgetTable";
 
 const phPeso = new Intl.NumberFormat("en-PH", {
   style: "currency",
@@ -14,19 +15,19 @@ export default function BudgetCollapse() {
     {
       key: "bills",
       label: "Bills",
-      children: <></>,
+      children: <BudgetTable />,
       extra: phPeso.format(0),
     },
     {
       key: "needs",
       label: "Needs",
-      children: <></>,
+      children: <BudgetTable />,
       extra: phPeso.format(0),
     },
     {
       key: "wants",
       label: "Wants",
-      children: <></>,
+      children: <BudgetTable />,
       extra: phPeso.format(0),
     },
   ];

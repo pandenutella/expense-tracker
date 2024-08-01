@@ -23,6 +23,10 @@ export default function Sider() {
         bottom: 0,
         width: "100%",
         padding: 0,
+        zIndex: 1,
+        borderTopColor: "rgb(240, 240, 240)",
+        borderTopStyle: "solid",
+        borderTopWidth: 0.8,
       }}
     >
       <NavigationMenu mode="horizontal" />

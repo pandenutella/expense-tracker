@@ -19,7 +19,15 @@ export default function AppLayout({ children }) {
       <Header />
       <Layout>
         <Sider />
-        <Content style={{ padding: 20 }}>{children}</Content>
+        <Content
+          style={{
+            padding: 20,
+            maxHeight: "calc(100vh - 64px)",
+            overflowY: "auto",
+          }}
+        >
+          {children}
+        </Content>
       </Layout>
       <AddTransactionButton />
     </AccountsContextProvider>
