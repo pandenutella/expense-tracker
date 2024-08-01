@@ -1,6 +1,5 @@
 import { auth, db } from "@/firebase";
 import { existsBy, readAll, readById } from "@/utilities/service.utility";
-import dayjs from "dayjs";
 import {
   collection,
   doc,
@@ -38,11 +37,15 @@ export const createAccount = async (account, startingBalance) => {
 
   const batch = writeBatch(db);
 
+  const timestamp = Timestamp.now();
+
   const accountRef = doc(collection(db, COLLECTION));
   batch.set(accountRef, {
     ...account,
     amount: startingBalance,
     userUuid: auth.currentUser.uid,
+    createdAt: timestamp,
+    updatedAt: timestamp,
   });
 
   const transactionRef = doc(collection(db, "transactions"));
@@ -53,7 +56,9 @@ export const createAccount = async (account, startingBalance) => {
     amount: startingBalance,
     notes: "Starting balance",
     cleared: true,
-    date: Timestamp.fromDate(dayjs().toDate()),
+    date: timestamp,
+    createdAt: timestamp,
+    updatedAt: timestamp,
   });
 
   return await batch.commit().then(() => findById(accountRef.id));
