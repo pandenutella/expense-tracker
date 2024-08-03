@@ -51,10 +51,11 @@ export const createAccount = async (account, startingBalance) => {
   const transactionRef = doc(collection(db, "transactions"));
   batch.set(transactionRef, {
     userUuid: auth.currentUser.uid,
+    type: "INITIALIZE",
     accountId: accountRef.id,
     categoryId: null,
     amount: startingBalance,
-    notes: "Starting balance",
+    notes: null,
     cleared: true,
     date: timestamp,
     createdAt: timestamp,
