@@ -1,29 +1,33 @@
 "use client";
 
 import { useAccountsContext } from "@/contexts/AccountsContext";
-import { findById } from "@/services/accounts.service";
+import { findByLabel } from "@/services/accounts.service";
+import { decodeUriString } from "@/utilities/string.utility";
 import { Breadcrumb, Spin } from "antd";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-export default function ViewAccountsPage({ params }) {
-  const { id } = params;
+export default function ViewAccountTransactionsPage({ params }) {
+  const { label } = params;
   const [account, setAccount] = useState(null);
   const [fetching, setFetching] = useState(true);
   const { accounts } = useAccountsContext();
 
   useEffect(() => {
-    const cachedAccount = accounts.find((a) => a.id === id);
+    const decodedLabelLowerCase = decodeUriString(label).toLowerCase();
+    const cachedAccount = accounts.find(
+      (a) => a.label === decodedLabelLowerCase
+    );
 
     if (cachedAccount) {
       setAccount(cachedAccount);
       setFetching(false);
     } else {
-      findById(id)
+      findByLabel(decodedLabelLowerCase)
         .then(setAccount)
         .finally(() => setFetching(false));
     }
-  }, [id]);
+  }, [label]);
 
   if (fetching) {
     return <Spin />;

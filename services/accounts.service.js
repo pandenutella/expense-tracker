@@ -1,5 +1,10 @@
 import { auth, db } from "@/firebase";
-import { existsBy, readAll, readById } from "@/utilities/service.utility";
+import {
+  existsBy,
+  readAll,
+  readBy,
+  readById,
+} from "@/utilities/service.utility";
 import {
   collection,
   doc,
@@ -22,6 +27,13 @@ export const findById = async (id) => {
   return await readById(COLLECTION, id);
 };
 
+export const findByLabel = async (labelLowerCase) => {
+  return await readBy(COLLECTION, [
+    where("userUuid", "==", auth.currentUser.uid),
+    where("labelLowerCase", "==", labelLowerCase),
+  ]);
+};
+
 export const createAccount = async (account, startingBalance) => {
   const labelExists = await existsBy(COLLECTION, [
     where("userUuid", "==", auth.currentUser.uid),
@@ -42,6 +54,7 @@ export const createAccount = async (account, startingBalance) => {
   const accountRef = doc(collection(db, COLLECTION));
   batch.set(accountRef, {
     ...account,
+    labelLowerCase: account.label.toLowerCase(),
     amount: startingBalance,
     userUuid: auth.currentUser.uid,
     createdAt: timestamp,

@@ -28,6 +28,16 @@ export const readById = async (collection, id) => {
   return { ...snapshot.data(), id: snapshot.id };
 };
 
+export const readBy = async (collection, options) => {
+  const snapshot = await getDocs(query(coll(db, collection), ...options));
+  if (snapshot.empty) {
+    return Promise.reject({ statusCode: 404 });
+  }
+
+  const doc = snapshot.docs[0];
+  return { id: doc.id, ...doc.data() };
+};
+
 export const existsBy = async (collection, options) => {
   const snapshot = await getDocs(query(coll(db, collection), ...options));
 

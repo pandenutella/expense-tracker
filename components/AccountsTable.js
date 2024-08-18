@@ -51,7 +51,9 @@ export default function AccountsTable() {
         <Space>
           <Button
             icon={<FundViewOutlined />}
-            onClick={() => router.push(`/accounts/${record.id}`)}
+            onClick={() =>
+              router.push(`/accounts/${record.labelLowerCase}/transactions`)
+            }
           />
           <Button icon={<EditOutlined />} disabled />
         </Space>
