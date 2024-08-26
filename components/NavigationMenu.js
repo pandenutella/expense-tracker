@@ -1,6 +1,10 @@
 "use client";
 
-import { BankOutlined, CalculatorOutlined } from "@ant-design/icons";
+import {
+  BankOutlined,
+  CalculatorOutlined,
+  TransactionOutlined,
+} from "@ant-design/icons";
 import { Menu } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -14,6 +18,11 @@ const items = [
     key: "/accounts",
     label: "Accounts",
     icon: <BankOutlined />,
+  },
+  {
+    key: "/lending",
+    label: "Lending",
+    icon: <TransactionOutlined />,
   },
 ];
 
