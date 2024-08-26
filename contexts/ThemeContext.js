@@ -1,36 +1,40 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import useLocalStorage from "@/hooks/useLocalStorage";
+import { Spin } from "antd";
+import { createContext, useContext, useEffect, useState } from "react";
 
 export const ThemeContext = createContext();
 export const useThemeContext = () => useContext(ThemeContext);
 
-const MODE_THEME_KEY = "theme.mode";
-
-const getStoredThemeMode = () => {
-  let mode = localStorage.getItem(MODE_THEME_KEY);
-  if (!mode) {
-    mode = "light";
-    localStorage.setItem("theme.mode", mode);
-
-    return mode;
-  }
-
-  return mode;
-};
-
 export const ThemeContextProvider = ({ children }) => {
-  const storedThemeMode = getStoredThemeMode();
-  const [mode, setMode] = useState(storedThemeMode);
+  const { get: getStoredMode, set: setStoredMode } =
+    useLocalStorage("theme.mode");
+  const [mode, setMode] = useState();
+  const [initializing, setInitializing] = useState(true);
+
+  useEffect(() => {
+    const storedMode = getStoredMode();
+    if (!storedMode) {
+      const initialMode = "light";
+
+      setStoredMode(initialMode);
+      setMode(initialMode);
+    } else {
+      setMode(storedMode);
+    }
+
+    setInitializing(false);
+  }, []);
 
   const setModeExternal = (mode) => {
-    localStorage.setItem("theme.mode", mode);
+    setStoredMode(mode);
     setMode(mode);
   };
 
   return (
     <ThemeContext.Provider value={{ mode, setMode: setModeExternal }}>
-      {children}
+      {initializing ? <Spin /> : children}
     </ThemeContext.Provider>
   );
 };
