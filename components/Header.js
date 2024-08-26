@@ -1,13 +1,27 @@
 "use client";
 
+import { useThemeContext } from "@/contexts/ThemeContext";
 import { auth } from "@/firebase";
 import useResponsiveValue from "@/hooks/useResponsiveValue";
-import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Button, Dropdown, Flex, Layout, message } from "antd";
+import { MoonOutlined, SunOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  Avatar,
+  Button,
+  Dropdown,
+  Flex,
+  Layout,
+  message,
+  Segmented,
+} from "antd";
 import { signOut } from "firebase/auth";
 
 export default function Header() {
+  const { mode, setMode } = useThemeContext();
   const padding = useResponsiveValue(50, 20);
+
+  const handleThemeChange = (value) => {
+    setMode(value);
+  };
 
   const handleUserActions = ({ key }) => {
     if ("logout" === key) {
@@ -24,10 +38,6 @@ export default function Header() {
   return (
     <Layout.Header
       style={{
-        backgroundColor: "white",
-        borderBottomColor: "rgb(240, 240, 240)",
-        borderBottomStyle: "solid",
-        borderBottomWidth: 0.8,
         paddingLeft: padding,
         paddingRight: padding,
       }}
@@ -38,6 +48,20 @@ export default function Header() {
         gap={10}
         style={{ height: "100%" }}
       >
+        <Segmented
+          value={mode}
+          onChange={handleThemeChange}
+          options={[
+            {
+              value: "light",
+              icon: <SunOutlined />,
+            },
+            {
+              value: "dark",
+              icon: <MoonOutlined />,
+            },
+          ]}
+        />
         <Dropdown
           menu={{
             items: [

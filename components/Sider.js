@@ -9,7 +9,11 @@ export default function Sider() {
 
   if (desktop) {
     return (
-      <Layout.Sider collapsible theme="light">
+      <Layout.Sider
+        collapsible
+        theme="light"
+        style={{ background: "transparent" }}
+      >
         <NavigationMenu mode="inline" />
       </Layout.Sider>
     );
@@ -24,9 +28,6 @@ export default function Sider() {
         width: "100%",
         padding: 0,
         zIndex: 1,
-        borderTopColor: "rgb(240, 240, 240)",
-        borderTopStyle: "solid",
-        borderTopWidth: 0.8,
       }}
     >
       <NavigationMenu mode="horizontal" />
