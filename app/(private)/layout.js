@@ -4,6 +4,7 @@ import AddTransactionButton from "@/components/AddTransactionButton";
 import Header from "@/components/Header";
 import Sider from "@/components/Sider";
 import { AccountsContextProvider } from "@/contexts/AccountsContext";
+import { BudgetCategoriesContextProvider } from "@/contexts/BudgetCategoriesContext";
 import usePrivateRoute from "@/hooks/usePrivateRoute";
 import { Layout } from "antd";
 import { Content } from "antd/es/layout/layout";
@@ -15,21 +16,23 @@ export default function AppLayout({ children }) {
   }
 
   return (
-    <AccountsContextProvider>
-      <Header />
-      <Layout>
-        <Sider />
-        <Content
-          style={{
-            padding: 20,
-            maxHeight: "calc(100vh - 64px)",
-            overflowY: "auto",
-          }}
-        >
-          {children}
-        </Content>
-      </Layout>
-      <AddTransactionButton />
-    </AccountsContextProvider>
+    <BudgetCategoriesContextProvider>
+      <AccountsContextProvider>
+        <Header />
+        <Layout>
+          <Sider />
+          <Content
+            style={{
+              padding: 20,
+              maxHeight: "calc(100vh - 64px)",
+              overflowY: "auto",
+            }}
+          >
+            {children}
+          </Content>
+        </Layout>
+        <AddTransactionButton />
+      </AccountsContextProvider>
+    </BudgetCategoriesContextProvider>
   );
 }

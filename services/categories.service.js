@@ -1,14 +1,22 @@
 import { auth, db } from "@/firebase";
-import { existsBy, readById } from "@/utilities/service.utility";
+import { existsBy, readAll, readById } from "@/utilities/service.utility";
 import {
   collection,
   doc,
+  orderBy,
   Timestamp,
   where,
   writeBatch,
 } from "firebase/firestore";
 
 const COLLECTION = "categories";
+
+export const findAllCategories = async () => {
+  return await readAll(COLLECTION, [
+    where("userUuid", "==", auth.currentUser.uid),
+    orderBy("label"),
+  ]);
+};
 
 export const findById = async (id) => {
   return await readById(COLLECTION, id);

@@ -1,3 +1,4 @@
+import { useBudgetCategoriesContext } from "@/contexts/BudgetCategoriesContext";
 import { createCategory } from "@/services/categories.service";
 import { FolderOpenOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message, Modal, Select } from "antd";
@@ -6,6 +7,7 @@ import { useState } from "react";
 export default function AddBudgetCategory() {
   const [open, setOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const { addCategory } = useBudgetCategoriesContext();
 
   const handleOpen = () => {
     setOpen(true);
@@ -24,6 +26,7 @@ export default function AddBudgetCategory() {
     const category = {
       type: values.type,
       label: values.label,
+      remaining: 0.0,
     };
 
     setProcessing(true);
@@ -33,6 +36,7 @@ export default function AddBudgetCategory() {
           `Added category "${createdCategory.label}" successfully!`
         );
 
+        addCategory(createdCategory);
         setOpen(false);
       })
       .catch(catchError)
