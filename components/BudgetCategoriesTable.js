@@ -1,6 +1,7 @@
 import useResponsiveValue from "@/hooks/useResponsiveValue";
 import { sortByProperty } from "@/utilities/array.utility";
-import { Table } from "antd";
+import { EditOutlined } from "@ant-design/icons";
+import { Button, Space, Table } from "antd";
 import { useMemo } from "react";
 
 const phPeso = new Intl.NumberFormat("en-PH", {
@@ -15,15 +16,20 @@ const columns = [
     title: "Category",
   },
   {
-    key: "remaining",
-    dataIndex: "remaining",
-    title: "Remaining",
-    render: (remaining) => phPeso.format(remaining),
+    key: "amount",
+    dataIndex: "amount",
+    title: "Amount",
+    render: (amount) => phPeso.format(amount),
     align: "right",
   },
   {
     key: "actions",
     align: "right",
+    render: () => (
+      <Space>
+        <Button icon={<EditOutlined />} disabled />
+      </Space>
+    ),
   },
 ];
 
@@ -44,6 +50,7 @@ export default function BudgetCategoriesTable({ categories }) {
       dataSource={dataSource}
       size={size}
       scroll={{ x: true }}
+      pagination={false}
     />
   );
 }

@@ -26,7 +26,7 @@ export default function AddBudgetCategory() {
     const category = {
       type: values.type,
       label: values.label,
-      remaining: 0.0,
+      amount: 0.0,
     };
 
     setProcessing(true);
