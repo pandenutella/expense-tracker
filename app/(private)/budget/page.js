@@ -8,9 +8,7 @@ import { Col, Row } from "antd";
 export default function AppBudgetPage() {
   return (
     <Row gutter={[20, 20]}>
-      <Col span={24}>
-        <BudgetStatistics />
-      </Col>
+      <BudgetStatistics render={(element) => <Col span={24}>{element}</Col>} />
       <Col span={24}>
         <BudgetActions />
       </Col>

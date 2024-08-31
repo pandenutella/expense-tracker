@@ -1,6 +1,7 @@
 "use client";
 
 import { auth } from "@/firebase";
+import { initializeUnallocatedCategory } from "@/services/categories.service";
 import { KeyOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message } from "antd";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -29,6 +30,7 @@ export default function BasicLoginForm() {
     setProcessing(true);
     signInWithEmailAndPassword(auth, data.emailAddress, data.password)
       .then(({ user }) => {
+        initializeUnallocatedCategory();
         message.success(`Welcome, ${user.email}!`);
       })
       .catch((error) => {

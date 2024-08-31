@@ -49,3 +49,30 @@ export const createCategory = async (category) => {
 
   return await batch.commit().then(() => findById(categoryRef.id));
 };
+
+export const initializeUnallocatedCategory = async () => {
+  const exists = await existsBy(COLLECTION, [
+    where("userUuid", "==", auth.currentUser.uid),
+    where("type", "==", "SYSTEM"),
+    where("label", "==", "Unallocated"),
+  ]);
+
+  if (exists) {
+    return Promise.resolve();
+  }
+
+  const batch = writeBatch(db);
+  const timestamp = Timestamp.now();
+
+  const categoryRef = doc(collection(db, COLLECTION));
+  batch.set(categoryRef, {
+    type: "SYSTEM",
+    label: "Unallocated",
+    amount: 0.0,
+    userUuid: auth.currentUser.uid,
+    createdAt: timestamp,
+    updatedAt: timestamp,
+  });
+
+  return await batch.commit();
+};
