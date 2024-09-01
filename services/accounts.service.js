@@ -7,7 +7,10 @@ import {
   readById,
 } from "@/utilities/service.utility";
 import { orderBy, Timestamp, where, writeBatch } from "firebase/firestore";
-import { adjustUnallocatedCategoryAmount } from "./categories.service";
+import {
+  getAdjustUnallocatedCategoryAmountUpdateRequest,
+  getUnallocatedCategoryDoc,
+} from "./categories.service";
 
 const COLLECTION = "accounts";
 
@@ -56,12 +59,23 @@ export const createAccount = async (account, startingBalance) => {
     updatedAt: timestamp,
   });
 
+  const { ref: categoryRef, record: category } =
+    await getUnallocatedCategoryDoc();
+  batch.update(
+    categoryRef,
+    getAdjustUnallocatedCategoryAmountUpdateRequest(
+      category,
+      startingBalance,
+      timestamp
+    )
+  );
+
   const transactionRef = createRef("transactions");
   batch.set(transactionRef, {
     userUuid: auth.currentUser.uid,
     type: "INITIALIZE",
     accountId: accountRef.id,
-    categoryId: null,
+    categoryId: categoryRef.id,
     amount: startingBalance,
     notes: null,
     cleared: true,
@@ -69,8 +83,6 @@ export const createAccount = async (account, startingBalance) => {
     createdAt: timestamp,
     updatedAt: timestamp,
   });
-
-  await adjustUnallocatedCategoryAmount(batch, startingBalance, timestamp);
 
   return await batch.commit().then(() => findById(accountRef.id));
 };

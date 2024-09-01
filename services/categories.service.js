@@ -82,19 +82,21 @@ export const initializeUnallocatedCategory = async () => {
   return await batch.commit();
 };
 
-export const adjustUnallocatedCategoryAmount = async (
-  batch,
-  amount,
-  timestamp
-) => {
-  const { ref, record: category } = await readDocBy(COLLECTION, [
+export const getUnallocatedCategoryDoc = async () => {
+  const data = await readDocBy(COLLECTION, [
     where("userUuid", "==", auth.currentUser.uid),
     where("type", "==", "SYSTEM"),
     where("label", "==", "Unallocated"),
   ]);
 
-  batch.update(ref, {
-    amount: category.amount + amount,
-    updatedAt: timestamp,
-  });
+  return data;
 };
+
+export const getAdjustUnallocatedCategoryAmountUpdateRequest = (
+  category,
+  amount,
+  timestamp
+) => ({
+  amount: category.amount + amount,
+  updatedAt: timestamp,
+});
