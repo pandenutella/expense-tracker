@@ -1,18 +1,13 @@
 import { auth, db } from "@/firebase";
 import {
+  createRef,
   existsBy,
   readAll,
   readBy,
   readById,
 } from "@/utilities/service.utility";
-import {
-  collection,
-  doc,
-  orderBy,
-  Timestamp,
-  where,
-  writeBatch,
-} from "firebase/firestore";
+import { orderBy, Timestamp, where, writeBatch } from "firebase/firestore";
+import { adjustUnallocatedCategoryAmount } from "./categories.service";
 
 const COLLECTION = "accounts";
 
@@ -51,7 +46,7 @@ export const createAccount = async (account, startingBalance) => {
 
   const timestamp = Timestamp.now();
 
-  const accountRef = doc(collection(db, COLLECTION));
+  const accountRef = createRef(COLLECTION);
   batch.set(accountRef, {
     ...account,
     labelLowerCase: account.label.toLowerCase(),
@@ -61,7 +56,7 @@ export const createAccount = async (account, startingBalance) => {
     updatedAt: timestamp,
   });
 
-  const transactionRef = doc(collection(db, "transactions"));
+  const transactionRef = createRef("transactions");
   batch.set(transactionRef, {
     userUuid: auth.currentUser.uid,
     type: "INITIALIZE",
@@ -74,6 +69,8 @@ export const createAccount = async (account, startingBalance) => {
     createdAt: timestamp,
     updatedAt: timestamp,
   });
+
+  await adjustUnallocatedCategoryAmount(batch, startingBalance, timestamp);
 
   return await batch.commit().then(() => findById(accountRef.id));
 };

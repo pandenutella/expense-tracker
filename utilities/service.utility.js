@@ -8,6 +8,8 @@ import {
   query,
 } from "firebase/firestore";
 
+export const createRef = (collection) => doc(coll(db, collection));
+
 export const readAll = async (collection, options) => {
   const data = [];
 
@@ -28,14 +30,22 @@ export const readById = async (collection, id) => {
   return { ...snapshot.data(), id: snapshot.id };
 };
 
-export const readBy = async (collection, options) => {
+export const readDocBy = async (collection, options) => {
   const snapshot = await getDocs(query(coll(db, collection), ...options));
   if (snapshot.empty) {
     return Promise.reject({ statusCode: 404 });
   }
 
   const doc = snapshot.docs[0];
-  return { id: doc.id, ...doc.data() };
+  const record = { id: doc.id, ...doc.data() };
+
+  return { doc, ref: doc.ref, record };
+};
+
+export const readBy = async (collection, options) => {
+  const { record } = await readDocBy(collection, options);
+
+  return record;
 };
 
 export const existsBy = async (collection, options) => {

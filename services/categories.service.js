@@ -1,5 +1,10 @@
 import { auth, db } from "@/firebase";
-import { existsBy, readAll, readById } from "@/utilities/service.utility";
+import {
+  existsBy,
+  readAll,
+  readById,
+  readDocBy,
+} from "@/utilities/service.utility";
 import {
   collection,
   doc,
@@ -75,4 +80,21 @@ export const initializeUnallocatedCategory = async () => {
   });
 
   return await batch.commit();
+};
+
+export const adjustUnallocatedCategoryAmount = async (
+  batch,
+  amount,
+  timestamp
+) => {
+  const { ref, record: category } = await readDocBy(COLLECTION, [
+    where("userUuid", "==", auth.currentUser.uid),
+    where("type", "==", "SYSTEM"),
+    where("label", "==", "Unallocated"),
+  ]);
+
+  batch.update(ref, {
+    amount: category.amount + amount,
+    updatedAt: timestamp,
+  });
 };
