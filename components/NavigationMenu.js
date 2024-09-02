@@ -3,7 +3,7 @@
 import {
   BankOutlined,
   CalculatorOutlined,
-  TransactionOutlined,
+  UserSwitchOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { usePathname, useRouter } from "next/navigation";
@@ -22,7 +22,7 @@ const items = [
   {
     key: "/lending",
     label: "Lending",
-    icon: <TransactionOutlined />,
+    icon: <UserSwitchOutlined />,
   },
 ];
 
