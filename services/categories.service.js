@@ -1,5 +1,7 @@
+import { CategoryTypes } from "@/constants/categories.constant";
 import { auth, db } from "@/firebase";
 import {
+  createRef,
   existsBy,
   getAuditFields,
   readAll,
@@ -59,7 +61,7 @@ export const createCategory = async (category) => {
 export const initializeUnallocatedCategory = async () => {
   const exists = await existsBy(COLLECTION, [
     where("userUuid", "==", auth.currentUser.uid),
-    where("type", "==", "SYSTEM"),
+    where("type", "==", CategoryTypes.SYSTEM),
     where("label", "==", "Unallocated"),
   ]);
 
@@ -69,9 +71,9 @@ export const initializeUnallocatedCategory = async () => {
 
   const batch = writeBatch(db);
 
-  const categoryRef = doc(collection(db, COLLECTION));
+  const categoryRef = createCategoryRef();
   batch.set(categoryRef, {
-    type: "SYSTEM",
+    type: CategoryTypes.SYSTEM,
     label: "Unallocated",
     amount: 0.0,
     ...getAuditFields(),
@@ -83,7 +85,7 @@ export const initializeUnallocatedCategory = async () => {
 export const getUnallocatedCategoryDoc = async () => {
   const data = await readDocBy(COLLECTION, [
     where("userUuid", "==", auth.currentUser.uid),
-    where("type", "==", "SYSTEM"),
+    where("type", "==", CategoryTypes.SYSTEM),
     where("label", "==", "Unallocated"),
   ]);
 
@@ -98,3 +100,5 @@ export const getAdjustUnallocatedCategoryAmountUpdateRequest = (
   amount: category.amount + amount,
   updatedAt: timestamp,
 });
+
+export const createCategoryRef = () => createRef(COLLECTION);

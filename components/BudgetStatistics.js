@@ -1,5 +1,6 @@
 "use client";
 
+import { CategoryTypes } from "@/constants/categories.constant";
 import { useBudgetCategoriesContext } from "@/contexts/BudgetCategoriesContext";
 import useResponsiveValue from "@/hooks/useResponsiveValue";
 import { Card, Col, Row, Statistic } from "antd";
@@ -13,7 +14,8 @@ export default function BudgetStatistics({ render }) {
     () =>
       categories.find(
         (category) =>
-          "SYSTEM" === category.type && "Unallocated" === category.label
+          CategoryTypes.SYSTEM === category.type &&
+          "Unallocated" === category.label
       )?.amount ?? 0,
     [categories]
   );

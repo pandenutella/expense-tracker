@@ -1,3 +1,4 @@
+import { CategoryTypes } from "@/constants/categories.constant";
 import { useBudgetCategoriesContext } from "@/contexts/BudgetCategoriesContext";
 import { createCategory } from "@/services/categories.service";
 import { FolderOpenOutlined } from "@ant-design/icons";
@@ -82,9 +83,9 @@ export default function AddBudgetCategory() {
         >
           <Select
             options={[
-              { label: "Bills", value: "BILLS" },
-              { label: "Needs", value: "NEEDS" },
-              { label: "Wants", value: "WANTS" },
+              { label: "Bills", value: CategoryTypes.BILLS },
+              { label: "Needs", value: CategoryTypes.NEEDS },
+              { label: "Wants", value: CategoryTypes.WANTS },
             ]}
           />
         </Form.Item>

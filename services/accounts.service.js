@@ -1,4 +1,5 @@
 import { AccountTypes } from "@/constants/accounts.constant";
+import { CategoryTypes } from "@/constants/categories.constant";
 import { auth, db } from "@/firebase";
 import {
   createRef,
@@ -10,6 +11,7 @@ import {
 } from "@/utilities/service.utility";
 import { orderBy, Timestamp, where, writeBatch } from "firebase/firestore";
 import {
+  createCategoryRef,
   getAdjustUnallocatedCategoryAmountUpdateRequest,
   getUnallocatedCategoryDoc,
 } from "./categories.service";
@@ -86,6 +88,14 @@ export const createAccount = async (account) => {
         timestamp
       )
     );
+  } else if (AccountTypes.CREDIT === account.type) {
+    const categoryRef = createCategoryRef();
+    batch.set(categoryRef, {
+      type: CategoryTypes.CREDIT_CARDS,
+      label: account.label,
+      amount,
+      ...getAuditFields(timestamp),
+    });
   }
 
   return await batch.commit().then(() => findById(accountRef.id));

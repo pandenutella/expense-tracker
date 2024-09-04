@@ -1,8 +1,10 @@
+import { CategoryTypes } from "@/constants/categories.constant";
 import { useBudgetCategoriesContext } from "@/contexts/BudgetCategoriesContext";
 import useResponsiveValue from "@/hooks/useResponsiveValue";
 import { Collapse, Spin } from "antd";
 import { useEffect } from "react";
 import BudgetCategoriesTable from "./BudgetCategoriesTable";
+import BudgetCreditCategoriesTable from "./BudgetCreditCategoriesTable";
 
 const phPeso = new Intl.NumberFormat("en-PH", {
   style: "currency",
@@ -26,35 +28,47 @@ export default function BudgetCollapse() {
     return <Spin />;
   }
 
-  const bills = categories.filter(filterByType("BILLS"));
+  const items = [];
+
+  const creditCards = categories.filter(
+    filterByType(CategoryTypes.CREDIT_CARDS)
+  );
+  if (creditCards.length) {
+    const creditCardsAmount = creditCards.reduce(reduceToTotal, 0);
+    items.push({
+      key: "credit-cards",
+      label: "Credit Cards",
+      children: <BudgetCreditCategoriesTable categories={creditCards} />,
+      extra: phPeso.format(creditCardsAmount),
+    });
+  }
+
+  const bills = categories.filter(filterByType(CategoryTypes.BILLS));
   const billsAmount = bills.reduce(reduceToTotal, 0);
+  items.push({
+    key: "bills",
+    label: "Bills",
+    children: <BudgetCategoriesTable categories={bills} />,
+    extra: phPeso.format(billsAmount),
+  });
 
-  const needs = categories.filter(filterByType("NEEDS"));
+  const needs = categories.filter(filterByType(CategoryTypes.NEEDS));
   const needsAmount = needs.reduce(reduceToTotal, 0);
+  items.push({
+    key: "needs",
+    label: "Needs",
+    children: <BudgetCategoriesTable categories={needs} />,
+    extra: phPeso.format(needsAmount),
+  });
 
-  const wants = categories.filter(filterByType("WANTS"));
+  const wants = categories.filter(filterByType(CategoryTypes.WANTS));
   const wantsAmount = wants.reduce(reduceToTotal, 0);
-
-  const items = [
-    {
-      key: "bills",
-      label: "Bills",
-      children: <BudgetCategoriesTable categories={bills} />,
-      extra: phPeso.format(billsAmount),
-    },
-    {
-      key: "needs",
-      label: "Needs",
-      children: <BudgetCategoriesTable categories={needs} />,
-      extra: phPeso.format(needsAmount),
-    },
-    {
-      key: "wants",
-      label: "Wants",
-      children: <BudgetCategoriesTable categories={wants} />,
-      extra: phPeso.format(wantsAmount),
-    },
-  ];
+  items.push({
+    key: "wants",
+    label: "Wants",
+    children: <BudgetCategoriesTable categories={wants} />,
+    extra: phPeso.format(wantsAmount),
+  });
 
   const activeKeys = items.map((item) => item.key);
 
