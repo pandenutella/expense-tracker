@@ -1,4 +1,4 @@
-import { db } from "@/firebase";
+import { auth, db } from "@/firebase";
 import {
   addDoc,
   collection as coll,
@@ -6,6 +6,7 @@ import {
   getDoc,
   getDocs,
   query,
+  Timestamp,
 } from "firebase/firestore";
 
 export const createRef = (collection) => doc(coll(db, collection));
@@ -58,4 +59,14 @@ export const createOne = async (collection, request) => {
   const doc = await addDoc(coll(db, collection), request);
 
   return await readById(collection, doc.id);
+};
+
+export const getAuditFields = (timestamp) => {
+  const nullCheckedTimestamp = timestamp ?? Timestamp.now();
+
+  return {
+    userUuid: auth.currentUser.uid,
+    createdAt: nullCheckedTimestamp,
+    updatedAt: nullCheckedTimestamp,
+  };
 };

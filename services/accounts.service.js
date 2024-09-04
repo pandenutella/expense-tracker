@@ -2,6 +2,7 @@ import { auth, db } from "@/firebase";
 import {
   createRef,
   existsBy,
+  getAuditFields,
   readAll,
   readBy,
   readById,
@@ -58,9 +59,7 @@ export const createAccount = async (account, startingBalance) => {
     ...account,
     labelLowerCase: account.label.toLowerCase(),
     amount: startingBalance,
-    userUuid: auth.currentUser.uid,
-    createdAt: timestamp,
-    updatedAt: timestamp,
+    ...getAuditFields(timestamp),
   });
 
   const { ref: categoryRef, record: category } =

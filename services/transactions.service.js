@@ -1,5 +1,4 @@
-import { auth } from "@/firebase";
-import { createRef } from "@/utilities/service.utility";
+import { createRef, getAuditFields } from "@/utilities/service.utility";
 
 const COLLECTION = "transactions";
 
@@ -9,7 +8,6 @@ export const getInitializeTransactionRequest = (
   startingBalance,
   timestamp
 ) => ({
-  userUuid: auth.currentUser.uid,
   type: "INITIALIZE",
   accountId,
   categoryId,
@@ -17,8 +15,7 @@ export const getInitializeTransactionRequest = (
   notes: null,
   cleared: true,
   date: timestamp,
-  createdAt: timestamp,
-  updatedAt: timestamp,
+  ...getAuditFields(timestamp),
 });
 
 export const createTransactionRef = () => createRef(COLLECTION);

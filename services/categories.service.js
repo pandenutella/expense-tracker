@@ -1,6 +1,7 @@
 import { auth, db } from "@/firebase";
 import {
   existsBy,
+  getAuditFields,
   readAll,
   readById,
   readDocBy,
@@ -67,16 +68,13 @@ export const initializeUnallocatedCategory = async () => {
   }
 
   const batch = writeBatch(db);
-  const timestamp = Timestamp.now();
 
   const categoryRef = doc(collection(db, COLLECTION));
   batch.set(categoryRef, {
     type: "SYSTEM",
     label: "Unallocated",
     amount: 0.0,
-    userUuid: auth.currentUser.uid,
-    createdAt: timestamp,
-    updatedAt: timestamp,
+    ...getAuditFields(),
   });
 
   return await batch.commit();
