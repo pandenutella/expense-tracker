@@ -11,6 +11,10 @@ import {
   getAdjustUnallocatedCategoryAmountUpdateRequest,
   getUnallocatedCategoryDoc,
 } from "./categories.service";
+import {
+  createTransactionRef,
+  getInitializeTransactionRequest,
+} from "./transactions.service";
 
 const COLLECTION = "accounts";
 
@@ -70,19 +74,16 @@ export const createAccount = async (account, startingBalance) => {
     )
   );
 
-  const transactionRef = createRef("transactions");
-  batch.set(transactionRef, {
-    userUuid: auth.currentUser.uid,
-    type: "INITIALIZE",
-    accountId: accountRef.id,
-    categoryId: categoryRef.id,
-    amount: startingBalance,
-    notes: null,
-    cleared: true,
-    date: timestamp,
-    createdAt: timestamp,
-    updatedAt: timestamp,
-  });
+  const transactionRef = createTransactionRef();
+  batch.set(
+    transactionRef,
+    getInitializeTransactionRequest(
+      accountRef.id,
+      categoryRef.id,
+      startingBalance,
+      timestamp
+    )
+  );
 
   return await batch.commit().then(() => findById(accountRef.id));
 };
