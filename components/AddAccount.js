@@ -1,3 +1,4 @@
+import { AccountTypes } from "@/constants/accounts.constant";
 import { useAccountsContext } from "@/contexts/AccountsContext";
 import { createAccount } from "@/services/accounts.service";
 import { BankOutlined } from "@ant-design/icons";
@@ -26,10 +27,11 @@ export default function AddAccount() {
     const account = {
       label: values.label,
       type: values.type,
+      amount: values.amount,
     };
 
     setProcessing(true);
-    createAccount(account, values.startingBalance)
+    createAccount(account)
       .then((createdAccount) => {
         message.success(
           `Added account "${createdAccount.label}" successfully!`
@@ -66,7 +68,7 @@ export default function AddAccount() {
             layout="vertical"
             requiredMark="optional"
             initialValues={{
-              startingBalance: 0.0,
+              amount: 0.0,
             }}
             onFinish={handleAdd}
           >
@@ -81,8 +83,8 @@ export default function AddAccount() {
         >
           <Select
             options={[
-              { label: "Debit", value: "DEBIT" },
-              { label: "Credit", value: "CREDIT" },
+              { label: "Debit", value: AccountTypes.DEBIT },
+              { label: "Credit", value: AccountTypes.CREDIT },
             ]}
           />
         </Form.Item>
@@ -94,7 +96,7 @@ export default function AddAccount() {
           <Input />
         </Form.Item>
         <Form.Item
-          name="startingBalance"
+          name="amount"
           label="Starting Balance"
           rules={[{ required: true, message: "This is required!" }]}
         >

@@ -1,3 +1,4 @@
+import { AccountTypes } from "@/constants/accounts.constant";
 import { auth, db } from "@/firebase";
 import {
   createRef,
@@ -37,7 +38,7 @@ export const findByLabel = async (labelLowerCase) => {
   ]);
 };
 
-export const createAccount = async (account, startingBalance) => {
+export const createAccount = async (account) => {
   const labelExists = await existsBy(COLLECTION, [
     where("userUuid", "==", auth.currentUser.uid),
     where("label", "==", account.label),
@@ -51,38 +52,54 @@ export const createAccount = async (account, startingBalance) => {
   }
 
   const batch = writeBatch(db);
-
   const timestamp = Timestamp.now();
+
+  const amount = getAmountByType(account);
 
   const accountRef = createRef(COLLECTION);
   batch.set(accountRef, {
     ...account,
+    amount,
     labelLowerCase: account.label.toLowerCase(),
-    amount: startingBalance,
     ...getAuditFields(timestamp),
   });
 
-  const { ref: categoryRef, record: category } =
-    await getUnallocatedCategoryDoc();
-  batch.update(
-    categoryRef,
-    getAdjustUnallocatedCategoryAmountUpdateRequest(
-      category,
-      startingBalance,
-      timestamp
-    )
-  );
+  if (AccountTypes.DEBIT === account.type) {
+    const { ref: categoryRef, record: category } =
+      await getUnallocatedCategoryDoc();
+    batch.update(
+      categoryRef,
+      getAdjustUnallocatedCategoryAmountUpdateRequest(
+        category,
+        amount,
+        timestamp
+      )
+    );
 
-  const transactionRef = createTransactionRef();
-  batch.set(
-    transactionRef,
-    getInitializeTransactionRequest(
-      accountRef.id,
-      categoryRef.id,
-      startingBalance,
-      timestamp
-    )
-  );
+    const transactionRef = createTransactionRef();
+    batch.set(
+      transactionRef,
+      getInitializeTransactionRequest(
+        accountRef.id,
+        categoryRef.id,
+        amount,
+        timestamp
+      )
+    );
+  }
 
   return await batch.commit().then(() => findById(accountRef.id));
+};
+
+const getAmountByType = (account) => {
+  const { type, amount } = account;
+
+  switch (type) {
+    case AccountTypes.DEBIT:
+      return amount;
+    case AccountTypes.CREDIT:
+      return -amount;
+    default:
+      return null;
+  }
 };

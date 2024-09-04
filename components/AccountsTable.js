@@ -35,7 +35,7 @@ export default function AccountsTable() {
     {
       key: "label",
       dataIndex: "label",
-      title: "Budget",
+      title: "Account",
     },
     {
       key: "amount",
