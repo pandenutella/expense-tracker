@@ -68,6 +68,9 @@ export default function AccountsTable() {
       dataSource={dataSource}
       loading={fetching}
       size={size}
+      locale={{
+        emptyText: "No accounts",
+      }}
     />
   );
 }

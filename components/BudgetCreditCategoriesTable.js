@@ -51,6 +51,9 @@ export default function BudgetCreditCategoriesTable({ categories }) {
       size={size}
       scroll={{ x: true }}
       pagination={false}
+      locale={{
+        emptyText: "No categories",
+      }}
     />
   );
 }
