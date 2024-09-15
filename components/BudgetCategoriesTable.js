@@ -14,6 +14,8 @@ const columns = [
     key: "label",
     dataIndex: "label",
     title: "Category",
+    render: (label, record) =>
+      record.icon ? `${record.icon} ${label}` : label,
   },
   {
     key: "amount",

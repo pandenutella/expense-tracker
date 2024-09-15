@@ -27,6 +27,7 @@ export default function AddAccount() {
     const account = {
       label: values.label,
       type: values.type,
+      icon: values.icon,
       amount: values.amount,
     };
 
@@ -93,6 +94,9 @@ export default function AddAccount() {
           label="Label"
           rules={[{ required: true, message: "This is required!" }]}
         >
+          <Input />
+        </Form.Item>
+        <Form.Item name="icon" label="Icon" tooltip="Use text emojis.">
           <Input />
         </Form.Item>
         <Form.Item

@@ -28,6 +28,7 @@ export default function AddBudgetCategory() {
       type: values.type,
       label: values.label,
       amount: 0.0,
+      icon: values.icon,
     };
 
     setProcessing(true);
@@ -94,6 +95,9 @@ export default function AddBudgetCategory() {
           label="Label"
           rules={[{ required: true, message: "This is required!" }]}
         >
+          <Input />
+        </Form.Item>
+        <Form.Item name="icon" label="Icon" tooltip="Use text emojis.">
           <Input />
         </Form.Item>
       </Modal>

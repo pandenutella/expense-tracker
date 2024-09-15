@@ -36,6 +36,8 @@ export default function AccountsTable() {
       key: "label",
       dataIndex: "label",
       title: "Account",
+      render: (label, record) =>
+        record.icon ? `${record.icon} ${label}` : label,
     },
     {
       key: "amount",

@@ -93,6 +93,7 @@ export const createAccount = async (account) => {
     batch.set(categoryRef, {
       type: CategoryTypes.CREDIT_CARDS,
       label: account.label,
+      icon: account.icon,
       amount,
       ...getAuditFields(timestamp),
     });
